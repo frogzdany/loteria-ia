@@ -1,0 +1,34 @@
+{
+  "name": "Board",
+  "type": "object",
+  "description": "One player's 4x4 board inside a game",
+  "properties": {
+    "game_id": { "type": "string", "description": "Game this board belongs to" },
+    "player_name": { "type": "string", "description": "Name typed by the player" },
+    "card_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "16 card ids in board order, position 0-15 (row-major)"
+    },
+    "marked": {
+      "type": "array",
+      "items": { "type": "number" },
+      "default": [],
+      "description": "Positions 0-15 the player marked with a bean"
+    },
+    "shouted_at": { "type": "string", "format": "date-time", "description": "When the player shouted loteria" },
+    "valid": { "type": "boolean", "description": "Result of the last validateBoard call" },
+    "winning_line": {
+      "type": "array",
+      "items": { "type": "number" },
+      "description": "Positions of the line that won, when valid"
+    }
+  },
+  "required": ["game_id", "player_name", "card_ids"],
+  "rls": {
+    "create": true,
+    "read": true,
+    "update": true,
+    "delete": { "user_condition": { "role": "admin" } }
+  }
+}

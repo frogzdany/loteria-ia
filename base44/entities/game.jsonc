@@ -1,0 +1,31 @@
+{
+  "name": "Game",
+  "type": "object",
+  "description": "A live loteria session run by a host over one deck",
+  "properties": {
+    "deck_id": { "type": "string", "description": "Deck used in this game" },
+    "code": { "type": "string", "description": "Short public code used in the QR, e.g. MTW1" },
+    "called_card_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": [],
+      "description": "Card ids in the order they were called"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["lobby", "playing", "finished"],
+      "default": "lobby",
+      "description": "Game state"
+    },
+    "winner_board_id": { "type": "string", "description": "Board that first shouted a valid loteria" },
+    "winner_name": { "type": "string", "description": "Player name of the winner, denormalized for the banner" },
+    "next_game_code": { "type": "string", "description": "Code of the game the caller opened next with the same deck; phones offer to join it" }
+  },
+  "required": ["deck_id", "code"],
+  "rls": {
+    "create": true,
+    "read": true,
+    "update": true,
+    "delete": { "user_condition": { "role": "admin" } }
+  }
+}

@@ -1,0 +1,22 @@
+# Dependencies
+node_modules
+
+# Build
+dist
+
+# Environment
+.env
+.env.*
+!.env.example
+*.local
+
+# Editor
+.vscode
+.idea
+.DS_Store
+*.swp
+
+# Base44
+.app.json*
+.types/
+

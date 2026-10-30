@@ -1,0 +1,27 @@
+{
+  "name": "Deck",
+  "type": "object",
+  "description": "A generated loteria deck: 16 cards built from a theme or a scraped agenda URL",
+  "properties": {
+    "provider": { "type": "string", "description": "Provider that generated the deck: base44, mock or openai" },
+    "theme": { "type": "string", "description": "Free theme or title derived from the source URL" },
+    "source_url": { "type": "string", "description": "Optional URL scraped with Firecrawl for context" },
+    "status": {
+      "type": "string",
+      "enum": ["generating", "ready", "error"],
+      "default": "generating",
+      "description": "Generation state"
+    },
+    "progress": { "type": "number", "default": 0, "description": "Cards with image and audio ready, 0-16" },
+    "card_count": { "type": "number", "default": 16, "description": "Number of cards in this deck" },
+    "shout_audio_url": { "type": "string", "description": "Pre-generated MP3 of the caller shouting Loteria, played on the winner banner" },
+    "error": { "type": "string", "description": "Last error message when status is error" }
+  },
+  "required": ["theme"],
+  "rls": {
+    "create": true,
+    "read": true,
+    "update": true,
+    "delete": { "user_condition": { "role": "admin" } }
+  }
+}

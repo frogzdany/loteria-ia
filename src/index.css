@@ -1,0 +1,239 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --rojo: #d7263d;
+    --oro: #f4c20d;
+    --azul: #1b4f9c;
+    --verde: #2e8b57;
+    --crema: #fff4d6;
+    --tinta: #1a1a1a;
+    color-scheme: light;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-crema text-tinta font-verse antialiased;
+    min-height: 100dvh;
+  }
+  h1, h2, h3 {
+    @apply font-display font-normal;
+    letter-spacing: 0.01em;
+  }
+  :focus-visible {
+    outline: 3px solid var(--azul);
+    outline-offset: 3px;
+  }
+  .bg-tinta :focus-visible,
+  .bg-rojo :focus-visible {
+    outline-color: var(--oro);
+  }
+}
+
+@layer components {
+  /* Printed-button: thick ink border with a hard offset shadow, like a press proof. */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 border-[3px] border-tinta font-display
+      text-base leading-none px-5 py-3 shadow-print select-none transition-[transform,box-shadow]
+      duration-75 rounded-[4px] whitespace-nowrap;
+  }
+  .btn:active:not(:disabled) {
+    transform: translate(3px, 3px);
+    box-shadow: 1px 1px 0 0 var(--tinta);
+  }
+  .btn:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+  .btn-rojo { @apply bg-rojo text-crema; }
+  .btn-oro { @apply bg-oro text-tinta; }
+  .btn-azul { @apply bg-azul text-crema; }
+  .btn-verde { @apply bg-verde text-crema; }
+  .btn-crema { @apply bg-crema text-tinta; }
+  .btn-sm { @apply text-sm px-3 py-2 border-2; box-shadow: 3px 3px 0 0 var(--tinta); }
+
+  .field {
+    @apply w-full border-[3px] border-tinta bg-white px-4 py-3 font-verse text-lg rounded-[4px]
+      placeholder:text-tinta/40 focus:outline-none focus:ring-4 focus:ring-oro;
+  }
+
+  /* ---------- The lotería card ---------- */
+  /* Traditional lotería card: white stock, thin ink line, plain number, capitals on a white band. */
+  .lcard {
+    container-type: inline-size;
+    @apply relative bg-white rounded-[4px];
+    border: 1px solid rgb(26 26 26 / 0.55);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+  }
+  .lcard-frame {
+    @apply relative flex flex-col overflow-hidden bg-white border-tinta;
+    border-width: max(1.5px, 0.9cqw);
+    aspect-ratio: 2 / 3;
+    /* cqw on the container itself would resolve against the viewport, so spacing lives here */
+    margin: 4cqw;
+  }
+  .lcard-art {
+    @apply relative min-h-0 flex-1 overflow-hidden;
+  }
+  .lcard-img {
+    @apply absolute inset-0 h-full w-full object-cover;
+  }
+  .lcard-num {
+    @apply absolute left-0 top-0 z-10 text-tinta font-display leading-none;
+    font-size: 12cqw;
+    padding: 2.5cqw 3.5cqw;
+    text-shadow: 0 0 2px #fff, 0 0 4px #fff, 0 0 6px #fff;
+  }
+  .lcard-band {
+    @apply relative z-10 shrink-0 bg-white text-tinta font-display text-center uppercase border-tinta;
+    border-top-width: max(1px, 0.7cqw);
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    padding: 2.6cqw 2cqw 3cqw;
+    text-wrap: balance;
+    /* Whole words only: the size shrinks for long names (nameFontSize) instead of breaking them. */
+    word-break: keep-all;
+    overflow-wrap: normal;
+    hyphens: none;
+    -webkit-hyphens: none;
+  }
+  .lcard-compact .lcard-frame {
+    margin: 3cqw;
+  }
+  .lcard-compact .lcard-band {
+    padding: 2.2cqw 1.5cqw 2.6cqw;
+    line-height: 1;
+  }
+  .lcard-compact .lcard-num {
+    font-size: 15cqw;
+    padding: 2cqw 3cqw;
+  }
+  /* Player board: the yellow sheet of a printed tabla. */
+  .tabla-sheet {
+    @apply mx-auto max-w-md border-[3px] border-tinta bg-oro p-2 rounded-[6px];
+    box-shadow: 4px 4px 0 0 var(--tinta);
+  }
+  .tabla-sheet .lcard { box-shadow: none; }
+  /* A called card the player has not marked yet: red frame and a "SALIÓ" tag. */
+  .cell-called::after {
+    content: "SALIÓ";
+    @apply pointer-events-none absolute left-1/2 top-0 z-30 -translate-x-1/2 -translate-y-1/3 bg-rojo font-display text-crema leading-none rounded-[3px];
+    font-size: 10px;
+    padding: 3px 5px 2px;
+    border: 2px solid var(--tinta);
+  }
+  .cell-pending { filter: saturate(0.35) brightness(0.92); opacity: 0.7; }
+  .lcard-play {
+    @apply absolute z-20 grid place-items-center rounded-full bg-oro text-tinta border-tinta shadow-print;
+    right: 3cqw;
+    top: 3cqw;
+    width: 20cqw;
+    height: 20cqw;
+    min-width: 36px;
+    min-height: 36px;
+    border-width: 3px;
+  }
+  .lcard-play:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 0 var(--tinta); }
+
+  /* Placeholder illustration: radiant sunburst like the backgrounds of old lotería prints. */
+  .sunburst {
+    background:
+      radial-gradient(circle at 50% 46%, var(--sb-core, var(--crema)) 0 17%, transparent 17.5%),
+      repeating-conic-gradient(from 0deg at 50% 46%, var(--sb-a) 0 10deg, var(--sb-b) 10deg 20deg);
+  }
+
+  /* Card back (face-down while the deck is being written). */
+  .card-back {
+    background-color: var(--azul);
+    background-image:
+      radial-gradient(circle at center, var(--oro) 0 2.2px, transparent 2.6px),
+      radial-gradient(circle at center, var(--crema) 0 1.2px, transparent 1.6px);
+    background-size: 18px 18px, 18px 18px;
+    background-position: 0 0, 9px 9px;
+  }
+
+  /* Papel picado strip */
+  .papel {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(56px, 1fr);
+    gap: 6px;
+    overflow: hidden;
+    border-top: 3px solid var(--tinta);
+  }
+  .papel > span {
+    display: block;
+    height: 46px;
+    clip-path: polygon(0 0, 100% 0, 100% 78%, 87.5% 100%, 75% 78%, 62.5% 100%, 50% 78%, 37.5% 100%, 25% 78%, 12.5% 100%, 0 78%);
+    -webkit-mask: radial-gradient(circle at 50% 42%, transparent 0 6px, #000 6.5px);
+    mask: radial-gradient(circle at 50% 42%, transparent 0 6px, #000 6.5px);
+  }
+
+  .paper-grain {
+    background-image:
+      radial-gradient(rgba(26, 26, 26, 0.05) 1px, transparent 1px);
+    background-size: 5px 5px;
+  }
+}
+
+@layer utilities {
+  .text-shadow-ink { text-shadow: 3px 3px 0 var(--tinta); }
+  .text-shadow-ink-lg { text-shadow: 6px 6px 0 var(--tinta); }
+  .safe-bottom { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+
+/* Base44 hosting injects a "Made with Base44" badge fixed at the bottom-right. On phones it sat on top of
+   the ¡Lotería! button and swallowed the tap (seen in the end-to-end test), so the bar leaves room for it. */
+@media (max-width: 640px) {
+  .safe-bottom {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 64px);
+  }
+}
+
+}
+
+/* ---------- Motion (one orchestrated moment per screen) ---------- */
+@keyframes bean-drop {
+  0% { transform: translate(-50%, -140%) rotate(-40deg) scale(0.6); opacity: 0; }
+  60% { transform: translate(-50%, -45%) rotate(8deg) scale(1.08); opacity: 1; }
+  100% { transform: translate(-50%, -50%) rotate(var(--bean-rot, -18deg)) scale(1); }
+}
+.bean-drop { animation: bean-drop 260ms cubic-bezier(.2,.9,.3,1.2) both; }
+
+@keyframes card-deal {
+  from { transform: translateY(24px) rotate(-3deg) scale(0.94); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.card-deal { animation: card-deal 420ms cubic-bezier(.2,.8,.2,1) both; }
+
+@keyframes banner-in {
+  0% { transform: scale(0.4) rotate(-8deg); opacity: 0; }
+  70% { transform: scale(1.06) rotate(1deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-2deg); }
+}
+.banner-in { animation: banner-in 600ms cubic-bezier(.2,.9,.3,1.1) both; }
+
+@keyframes confetti-fall {
+  0% { transform: translate3d(0, -10vh, 0) rotate(0deg); }
+  100% { transform: translate3d(var(--drift, 0px), 110vh, 0) rotate(var(--spin, 540deg)); }
+}
+.confetti-piece {
+  position: absolute;
+  top: 0;
+  animation: confetti-fall var(--dur, 3.2s) linear var(--delay, 0s) infinite;
+}
+
+@keyframes sb-spin { to { transform: rotate(360deg); } }
+.sunburst-spin { animation: sb-spin 60s linear infinite; }
+
+@keyframes pulse-ring {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(244, 194, 13, 0.85); }
+  50% { box-shadow: 0 0 0 6px rgba(244, 194, 13, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bean-drop, .card-deal, .banner-in, .confetti-piece, .sunburst-spin { animation: none !important; }
+  .confetti-piece { display: none; }
+}

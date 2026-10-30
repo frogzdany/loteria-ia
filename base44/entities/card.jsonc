@@ -1,0 +1,24 @@
+{
+  "name": "Card",
+  "type": "object",
+  "description": "One loteria card: name, caller verse, illustration and pre-generated audio",
+  "properties": {
+    "deck_id": { "type": "string", "description": "Deck this card belongs to" },
+    "number": { "type": "number", "description": "Position in the deck, 1-16" },
+    "name": { "type": "string", "description": "Card name with article, e.g. 'El founder'" },
+    "verse": { "type": "string", "description": "Two-line caller verse that hints at the card" },
+    "visual": { "type": "string", "description": "Short visual description used to build the image prompt" },
+    "image_prompt": { "type": "string", "description": "Full prompt sent to GenerateImage, kept to regenerate" },
+    "image_url": { "type": "string", "description": "Illustration URL from GenerateImage" },
+    "audio_url": { "type": "string", "description": "MP3 URL from ElevenLabs stored with UploadFile" },
+    "audio_b64": { "type": "string", "description": "Plan B: base64 MP3 when UploadFile is unavailable" },
+    "asset_error": { "type": "string", "description": "Last error while generating image or audio" }
+  },
+  "required": ["deck_id", "number", "name", "verse"],
+  "rls": {
+    "create": true,
+    "read": true,
+    "update": true,
+    "delete": { "user_condition": { "role": "admin" } }
+  }
+}
